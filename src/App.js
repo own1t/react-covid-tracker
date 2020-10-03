@@ -10,6 +10,9 @@ import {
   CardContent,
 } from "@material-ui/core";
 
+// Components
+import InfoBox from "./components/InfoBox";
+
 // CSS
 import "./App.css";
 
@@ -66,7 +69,11 @@ function App() {
         </FormControl>
       </div>
 
-      <div className="app__stats">//</div>
+      <div className="app__stats">
+        <InfoBox title="Coronavirus Cases" cases={3000} total={2000} />
+        <InfoBox title="Recovered" cases={3000} total={3000} />
+        <InfoBox title="Deaths" cases={3000} total={4000} />
+      </div>
     </div>
   );
 }
