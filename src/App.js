@@ -15,6 +15,8 @@ import InfoBox from "./components/InfoBox";
 import Map from "./components/Map";
 import Table from "./components/Table";
 
+import { sortData } from "./util";
+
 // CSS
 import "./App.css";
 
@@ -42,8 +44,9 @@ function App() {
             value: country.countryInfo.iso2, // Country Code
           }));
 
+          const sortedData = sortData(data);
           setCountries(countries);
-          setTableData(data);
+          setTableData(sortedData);
         });
     };
 
