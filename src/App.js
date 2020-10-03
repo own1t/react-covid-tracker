@@ -20,11 +20,15 @@ import "./App.css";
 function App() {
   const [countries, setCountries] = useState([]);
   const [inputCountry, setInputCountry] = useState("worldwide");
+  const [countryInfo, setCountryInfo] = useState({});
 
-  // useEffect(() => {
-  //   fetch("https://disease.sh/v3/covid-19/all")
-  //     .then()
-  // }, [])
+  useEffect(() => {
+    fetch("https://disease.sh/v3/covid-19/all")
+      .then((response) => response.json())
+      .then((data) => {
+        setCountryInfo(data);
+      });
+  }, []);
 
   useEffect(() => {
     const getCountriesData = async () => {
@@ -32,8 +36,8 @@ function App() {
         .then((response) => response.json())
         .then((data) => {
           const countries = data.map((country) => ({
-            name: country.country,
-            value: country.countryInfo.iso2,
+            name: country.country, // Country Name
+            value: country.countryInfo.iso2, // Country Code
           }));
 
           setCountries(countries);
@@ -48,8 +52,20 @@ function App() {
 
     // console.log(countryCode);
 
-    setInputCountry(countryCode);
+    const url =
+      countryCode === "worldwide"
+        ? "https://disease.sh/v3/covid-19/all"
+        : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
+
+    await fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setInputCountry(countryCode);
+        setCountryInfo(data);
+      });
   };
+
+  // console.log(countryInfo);
 
   return (
     <div className="app">
@@ -64,17 +80,31 @@ function App() {
               onChange={onCountryChange}
             >
               <MenuItem value="worldwide">Worldwide</MenuItem>
-              {countries.map((country) => (
-                <MenuItem value={country.value}>{country.name}</MenuItem>
+              {countries.map((country, idx) => (
+                <MenuItem key={idx} value={country.value}>
+                  {country.name}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
         </div>
 
         <div className="app__stats">
-          <InfoBox title="Coronavirus Cases" cases={3000} total={2000} />
-          <InfoBox title="Recovered" cases={3000} total={3000} />
-          <InfoBox title="Deaths" cases={3000} total={4000} />
+          <InfoBox
+            title="Coronavirus Cases"
+            cases={countryInfo.todayCases}
+            total={countryInfo.cases}
+          />
+          <InfoBox
+            title="Recovered"
+            cases={countryInfo.todayRecovered}
+            total={countryInfo.recovered}
+          />
+          <InfoBox
+            title="Deaths"
+            cases={countryInfo.todayDeaths}
+            total={countryInfo.deaths}
+          />
         </div>
 
         <Map />
