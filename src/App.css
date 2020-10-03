@@ -41,7 +41,7 @@ body {
 }
 
 .app__info > h3:last-of-type {
-  margin-top: 2rem;
+  margin-top: 3rem;
 }
 
 @media (max-width: 990px) {
