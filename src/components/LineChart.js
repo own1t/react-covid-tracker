@@ -51,7 +51,7 @@ const options = {
   },
 };
 
-function LineChart({ casesType = "cases" }) {
+function LineChart({ casesType }) {
   const [data, setData] = useState({});
 
   const buildChartData = (data, casesType) => {
