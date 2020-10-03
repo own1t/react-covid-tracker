@@ -20,12 +20,20 @@ import { sortData } from "./util";
 
 // CSS
 import "./App.css";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [inputCountry, setInputCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
+
+  // Table
   const [tableData, setTableData] = useState([]);
+
+  // Map
+  const [mapCenter, setMapCenter] = useState({ lat: 34.80746, lng: -40.4796 });
+  const [mapZoom, setMapZoom] = useState(3);
+  const [mapCountries, setMapCountries] = useState([]);
 
   useEffect(() => {
     fetch("https://disease.sh/v3/covid-19/all")
@@ -48,6 +56,9 @@ function App() {
           const sortedData = sortData(data);
           setCountries(countries);
           setTableData(sortedData);
+
+          // Map
+          setMapCountries(data);
         });
     };
 
@@ -69,6 +80,10 @@ function App() {
       .then((data) => {
         setInputCountry(countryCode);
         setCountryInfo(data);
+
+        // Map
+        setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
+        setMapZoom(4);
       });
   };
 
@@ -116,7 +131,7 @@ function App() {
           />
         </div>
 
-        <Map />
+        <Map countries={mapCountries} center={mapCenter} zoom={mapZoom} />
       </div>
 
       <Card className="app__right">
